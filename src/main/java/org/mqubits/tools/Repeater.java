@@ -1,4 +1,4 @@
-package org.mqubits;
+package org.mqubits.tools;
 
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;

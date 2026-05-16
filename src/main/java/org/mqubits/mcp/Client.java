@@ -1,4 +1,4 @@
-package org.mqubits;
+package org.mqubits.mcp;
 
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.McpSyncClient;
