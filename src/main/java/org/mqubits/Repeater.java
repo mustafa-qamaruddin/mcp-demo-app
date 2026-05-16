@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 public class Repeater {
-  public McpServerFeatures.SyncToolSpecification repeat() {
+  public static McpServerFeatures.SyncToolSpecification repeat() {
 
     Map<String, Object> properties = Map.of(
       "prompt", String.class
@@ -37,7 +37,7 @@ public class Repeater {
           new StringBuilder().append("Prompt: ").append(prompt).toString()
         );
         McpSchema.CallToolResult result = McpSchema.CallToolResult.builder()
-          .content(List.of(extContent))
+          .content(List.of(textContent))
           .isError(false)
           .build();
 
