@@ -18,6 +18,8 @@ dependencies {
     implementation("io.quarkus:quarkus-rest")
     testImplementation("io.quarkus:quarkus-junit")
     testImplementation("io.rest-assured:rest-assured")
+    // project dependencies
+    implementation("io.modelcontextprotocol.sdk:mcp:1.1.2")
 }
 
 group = "org.mqubits"
