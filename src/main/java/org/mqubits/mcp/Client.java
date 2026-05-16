@@ -11,7 +11,7 @@ import tools.jackson.databind.json.JsonMapper;
 
 public class Client {
   public static McpSyncClient createClient() {
-    JacksonMcpJsonMapper jsonMapper = new JacksonMcpJsonMapper((JsonMapper) new ObjectMapper());
+    JacksonMcpJsonMapper jsonMapper = new JacksonMcpJsonMapper(JsonMapper.builder().build());
     ServerParameters params = ServerParameters.builder("npx")
       .args("-y", "@modelcontextprotocol/server-everything")
       .build();

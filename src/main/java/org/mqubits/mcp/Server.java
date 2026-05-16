@@ -13,7 +13,7 @@ import tools.jackson.databind.json.JsonMapper;
 public class Server {
 
   public static McpSyncServer createServer() {
-    JacksonMcpJsonMapper jsonMapper = new JacksonMcpJsonMapper((JsonMapper) new ObjectMapper());
+    JacksonMcpJsonMapper jsonMapper = new JacksonMcpJsonMapper(JsonMapper.builder().build());
     McpServerTransportProvider transportProvider = new StdioServerTransportProvider(jsonMapper);
 
     McpSchema.ServerCapabilities serverCapabilities = McpSchema.ServerCapabilities.builder()
