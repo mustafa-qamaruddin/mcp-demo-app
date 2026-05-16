@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Server {
 
-  public McpSyncServer createServer() {
+  public static McpSyncServer createServer() {
     JacksonMcpJsonMapper jsonMapper = new JacksonMcpJsonMapper((JsonMapper) new ObjectMapper());
     McpServerTransportProvider transportProvider = new StdioServerTransportProvider(jsonMapper);
 
