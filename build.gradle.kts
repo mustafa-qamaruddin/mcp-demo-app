@@ -21,6 +21,9 @@ dependencies {
     // project dependencies
     implementation("io.modelcontextprotocol.sdk:mcp:1.1.2")
     implementation("org.jboss.slf4j:slf4j-jboss-logmanager")
+    compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
+    implementation("org.eclipse.jetty:jetty-server:12.1.9")
+    implementation("org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.9")
 }
 
 group = "org.mqubits"

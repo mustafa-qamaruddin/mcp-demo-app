@@ -2,6 +2,7 @@ package org.mqubits.mcp;
 
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.McpSyncClient;
+import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport;
 import io.modelcontextprotocol.client.transport.ServerParameters;
 import io.modelcontextprotocol.client.transport.StdioClientTransport;
 import io.modelcontextprotocol.json.jackson3.JacksonMcpJsonMapper;
@@ -17,16 +18,14 @@ import java.util.Map;
 @ApplicationScoped
 public class Client {
   McpSyncClient _client;
+  private static final String SSE_EP = "/mcp/sse";
 
   private static final Logger logger = Logger.getLogger(Client.class);
 
   public Client() {
-    JacksonMcpJsonMapper jsonMapper = new JacksonMcpJsonMapper(JsonMapper.builder().build());
-    ServerParameters params = ServerParameters.builder("npx")
-      .args("-y", "@modelcontextprotocol/server-everything")
+    McpClientTransport transport = HttpClientSseClientTransport
+      .builder("http://localhost:9090/"+SSE_EP)
       .build();
-
-    McpClientTransport transport = new StdioClientTransport(params, jsonMapper);
     this._client = McpClient.sync(transport).build();
     this._client.initialize();
   }

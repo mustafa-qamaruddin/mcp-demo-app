@@ -6,7 +6,7 @@ import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import jakarta.inject.Inject;
 import org.mqubits.mcp.Client;
-import org.mqubits.mcp.Server;
+import org.mqubits.mcp.MCPServer;
 import org.jboss.logging.Logger;
 
 @QuarkusMain
@@ -22,7 +22,7 @@ public class App {
 
   public static class QApp implements QuarkusApplication {
     @Inject
-    Server server;
+    MCPServer MCPServer;
 
     @Inject
     Client client;
@@ -31,11 +31,11 @@ public class App {
     public int run(String... args) throws Exception {
       System.out.println("Hello, MCP!");
 
-      server.explainServer();
+      MCPServer.explainServer();
 
       client.explainClient();
 
-      McpSchema.Tool repeater = server.getRepeater();
+      McpSchema.Tool repeater = MCPServer.getRepeater();
       client.callRepeater(repeater);
 
       Quarkus.waitForExit();
