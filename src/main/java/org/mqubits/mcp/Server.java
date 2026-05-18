@@ -6,18 +6,18 @@ import io.modelcontextprotocol.server.McpSyncServer;
 import io.modelcontextprotocol.server.transport.StdioServerTransportProvider;
 import io.modelcontextprotocol.spec.McpSchema;
 import io.modelcontextprotocol.spec.McpServerTransportProvider;
-import jakarta.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import org.jboss.logging.Logger;
 import org.mqubits.tools.Repeater;
-import org.slf4j.Logger;
-import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 
+@ApplicationScoped
 public class Server {
 
   McpSyncServer _server;
 
-  @Inject
-  Logger logger;
+  private static final Logger logger = Logger.getLogger(Server.class);
+
 
   public Server() {
     JacksonMcpJsonMapper jsonMapper = new JacksonMcpJsonMapper(JsonMapper.builder().build());
@@ -43,7 +43,7 @@ public class Server {
     logger.info("***** Server Tools:");
     for (McpSchema.Tool tool : this._server.listTools()) {
       logger.info("+ " + tool.title());
-      logger.info("\t" + tool.description());
+      logger.info("\t " + tool.description());
     }
   }
 

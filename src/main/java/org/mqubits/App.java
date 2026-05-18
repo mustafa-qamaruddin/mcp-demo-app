@@ -1,29 +1,45 @@
 package org.mqubits;
 
-import io.modelcontextprotocol.client.McpSyncClient;
-import io.modelcontextprotocol.server.McpSyncServer;
 import io.modelcontextprotocol.spec.McpSchema;
+import io.quarkus.runtime.Quarkus;
+import io.quarkus.runtime.QuarkusApplication;
+import io.quarkus.runtime.annotations.QuarkusMain;
 import jakarta.inject.Inject;
 import org.mqubits.mcp.Client;
 import org.mqubits.mcp.Server;
-import org.slf4j.Logger;
+import org.jboss.logging.Logger;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+@QuarkusMain
 public class App {
 
   public static void main(String[] args) {
-    System.out.println("Hello, MCP!");
+    Quarkus.run(QApp.class,
+      (exitCode, exception) -> {
+        Logger.getLogger(App.class).error("Error:" + exitCode + ", " + exception.getMessage());
+      },
+      args);
+  }
 
-    Server server = new Server();
-    server.explainServer();
+  public static class QApp implements QuarkusApplication {
+    @Inject
+    Server server;
 
-    Client client = new Client();
-    client.explainClient();
+    @Inject
+    Client client;
 
-    McpSchema.Tool repeater = server.getRepeater();
-    client.callRepeater(repeater);
+    @Override
+    public int run(String... args) throws Exception {
+      System.out.println("Hello, MCP!");
+
+      server.explainServer();
+
+      client.explainClient();
+
+      McpSchema.Tool repeater = server.getRepeater();
+      client.callRepeater(repeater);
+
+      Quarkus.waitForExit();
+      return 0;
+    }
   }
 }

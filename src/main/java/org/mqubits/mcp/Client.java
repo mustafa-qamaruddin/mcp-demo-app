@@ -7,20 +7,18 @@ import io.modelcontextprotocol.client.transport.StdioClientTransport;
 import io.modelcontextprotocol.json.jackson3.JacksonMcpJsonMapper;
 import io.modelcontextprotocol.spec.McpClientTransport;
 import io.modelcontextprotocol.spec.McpSchema;
-import jakarta.inject.Inject;
-import org.slf4j.Logger;
-import tools.jackson.databind.ObjectMapper;
+import jakarta.enterprise.context.ApplicationScoped;
+import org.jboss.logging.Logger;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
+@ApplicationScoped
 public class Client {
   McpSyncClient _client;
 
-  @Inject
-  Logger logger;
+  private static final Logger logger = Logger.getLogger(Client.class);
 
   public Client() {
     JacksonMcpJsonMapper jsonMapper = new JacksonMcpJsonMapper(JsonMapper.builder().build());
@@ -41,7 +39,7 @@ public class Client {
     logger.info("**** Tools");
     for (McpSchema.Tool tool : this._client.listTools().tools()) {
       logger.info("+ " + tool.title());
-      logger.info("\t" + tool.description());
+      logger.info("\t " + tool.description());
     }
   }
 
@@ -49,15 +47,22 @@ public class Client {
     Map<String, Object> payload = Map.of("prompt", "lorem ipsum amet dolor");
     McpSchema.CallToolRequest req = new McpSchema.CallToolRequest(tool.name(), payload);
     McpSchema.CallToolResult response = this._client.callTool(req);
+
     if (response.isError()) {
       List<String> errors = response.content().stream()
         .filter(l -> l.type().equals(McpSchema.TextContent.class.getTypeName()))
         .map(l -> ((McpSchema.TextContent) l).text())
-        .collect(Collectors.toList());
+        .toList();
       for (String err :
         errors) {
         logger.error(err);
       }
+      return;
     }
+
+    response.content().stream()
+      .filter(content -> content.type().equals(McpSchema.TextContent.class.getTypeName()))
+      .iterator()
+      .forEachRemaining(content -> logger.info(content.toString()));
   }
 }

@@ -20,6 +20,7 @@ dependencies {
     testImplementation("io.rest-assured:rest-assured")
     // project dependencies
     implementation("io.modelcontextprotocol.sdk:mcp:1.1.2")
+    implementation("org.jboss.slf4j:slf4j-jboss-logmanager")
 }
 
 group = "org.mqubits"
