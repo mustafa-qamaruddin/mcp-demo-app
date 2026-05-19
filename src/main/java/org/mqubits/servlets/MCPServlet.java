@@ -15,23 +15,23 @@ import static org.mqubits.mcp.MCPServer.MSG_EP;
 import static org.mqubits.mcp.MCPServer.SSE_EP;
 
 @WebServlet(
-        loadOnStartup = 1,
-        urlPatterns = {SSE_EP, MSG_EP},
-        asyncSupported = true
+  loadOnStartup = 1,
+  urlPatterns = {SSE_EP, MSG_EP},
+  asyncSupported = true
 )
 public class MCPServlet extends HttpServlet {
-    private MCPServer mcpServer;
+  private MCPServer mcpServer;
 
-    @Override
-    public void init(ServletConfig config)
-            throws ServletException {
-        super.init(config);
-        this.mcpServer = CDI.current().select(MCPServer.class).get();
-    }
+  @Override
+  public void init(ServletConfig config)
+    throws ServletException {
+    super.init(config);
+    this.mcpServer = CDI.current().select(MCPServer.class).get();
+  }
 
-    @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        this.mcpServer.transportProvider().service(req, resp);
-    }
+  @Override
+  protected void service(HttpServletRequest req, HttpServletResponse resp)
+    throws ServletException, IOException {
+    mcpServer.transportProvider().service(req, resp);
+  }
 }
