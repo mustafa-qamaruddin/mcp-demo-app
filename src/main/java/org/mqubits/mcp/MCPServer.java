@@ -8,6 +8,7 @@ import io.modelcontextprotocol.spec.McpSchema;
 import io.quarkus.runtime.Startup;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
 import org.eclipse.jetty.server.Server;
 import org.jboss.logging.Logger;
 import org.mqubits.tools.Repeater;
@@ -46,6 +47,7 @@ public class MCPServer {
       .build();
   }
 
+  @Produces
   public HttpServletSseServerTransportProvider transportProvider() {
     return this._transportProvider;
   }

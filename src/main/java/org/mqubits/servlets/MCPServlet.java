@@ -1,5 +1,6 @@
 package org.mqubits.servlets;
 
+import jakarta.servlet.AsyncContext;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
