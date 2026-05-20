@@ -1,7 +1,19 @@
-curl -N http://localhost:8080/mcp/sse
+// Initialize Session & Keep Open
+➜  ~ curl -N http://localhost:8080/mcp/sse
 
+event: endpoint
+data: /mcp/sse/msg?sessionId=bd17a912-3c8a-444f-8659-14a1221ff558
+
+// Get/Set Session_ID
+
+➜  ~ SESSION_ID=bd17a912-3c8a-444f-8659-14a1221ff558
+➜  ~ echo $SESSION_ID
+bd17a912-3c8a-444f-8659-14a1221ff558
+➜  ~
+
+// Initialize Client
 curl -v -X POST \
-  "http://localhost:8080/mcp/sse/msg?sessionId=SESSION_ID" \
+  "http://localhost:8080/mcp/sse/msg?sessionId=$SESSION_ID" \
   -H "Content-Type: application/json" \
   -d '{
     "jsonrpc":"2.0",
@@ -15,19 +27,77 @@ curl -v -X POST \
         "version":"1.0"
       }
     }
-  }'
+  }' | jq
 
+// Initialise Client Response
+event: message
+data: {
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "protocolVersion": "2024-11-05",
+    "capabilities": {
+      "logging": {},
+      "tools": {
+        "listChanged": true
+      }
+    },
+    "serverInfo": {
+      "name": "Mcp Server",
+      "version": "0.0.1"
+    }
+  }
+}
+
+# Notify: Initialized Notification
+curl \
+  "http://localhost:8080/mcp/sse/msg?sessionId=$SESSION_ID" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc":"2.0",
+    "method":"notifications/initialized"
+  }' | jq
+
+# List Tools
 curl -v -X POST \
-  "http://localhost:8080/mcp/sse/msg?sessionId=SESSION_ID" \
+  "http://localhost:8080/mcp/sse/msg?sessionId=$SESSION_ID" \
   -H "Content-Type: application/json" \
   -d '{
     "jsonrpc":"2.0",
     "id":2,
     "method":"tools/list"
-  }'
+  }' | jq
 
+# List Tools Response
+
+event: message
+data: {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "result": {
+          "tools": [
+            {
+              "name": "repeater",
+              "title": "Repeater",
+              "description": "Just another repeater",
+              "inputSchema": {
+                "type": "object",
+                "properties": {
+                  "prompt": "java.lang.String"
+                },
+                "required": [
+                  "prompt"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ]
+        }
+      }
+
+# Call Tool
 curl -v -X POST \
-  "http://localhost:8080/mcp/sse/msg?sessionId=SESSION_ID" \
+  "http://localhost:8080/mcp/sse/msg?sessionId=$SESSION_ID" \
   -H "Content-Type: application/json" \
   -d '{
     "jsonrpc":"2.0",
@@ -41,20 +111,18 @@ curl -v -X POST \
     }
   }'
 
-SESSION=$(curl -s http://localhost:8080/mcp/sse | grep sessionId | cut -d'=' -f2)
-
-curl -X POST "http://localhost:8080/mcp/sse/msg?sessionId=$SESSION" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "jsonrpc":"2.0",
-  "id":1,
-  "method":"initialize",
-  "params":{
-    "protocolVersion":"2024-11-05",
-    "capabilities":{},
-    "clientInfo":{
-      "name":"curl",
-      "version":"1"
-    }
-   }
-  }'
+# Call Tool Response
+event: message
+data: {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Prompt: hello world"
+            }
+          ],
+          "isError": false
+        }
+      }
